@@ -1,7 +1,7 @@
 # dotnet-sql-benchmarks
 
-## TODO
-- There is some query overhead in `SysObjectsQueryLarge` - ideally stage the data in something that runs at the start of the benchmark (##temp table)
+- Opening a single query before all benchmarks would mean each benchmark has less code
+- Copy-pasting the query is error-prone - could it be generated ahead of time for each different benchmark?
 
 ```shell
 dotnet run -c Release --filter ** --join

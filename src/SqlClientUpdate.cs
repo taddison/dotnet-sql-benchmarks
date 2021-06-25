@@ -8,16 +8,81 @@ using System;
 public static class Constants
 {
   public static string ConnectionString = "server=localhost;initial catalog=master;integrated security=SSPI";
-  public static string SysObjectsQuerySmall = "select top 100 o1.object_id, o1.name, o1.create_date, o1.is_ms_shipped from master.sys.objects o1 order by o1.object_id asc";
-  public static string SysObjectsQueryLarge = "select top 100000 o1.object_id, o1.name, o1.create_date, o1.is_ms_shipped from master.sys.objects o1 cross apply master.sys.objects o2 cross apply master.sys.objects o3 order by o1.object_id, o2.object_id, o3.object_id";
+
+  public static string Query_10 = @"
+  WITH
+L0 AS (SELECT 1 AS c UNION ALL SELECT 1),
+L1 AS (SELECT 1 AS c FROM L0 A CROSS JOIN L0 B),
+L2 AS (SELECT 1 AS c FROM L1 A CROSS JOIN L1 B),
+L3 AS (SELECT 1 AS c FROM L2 A CROSS JOIN L2 B),
+L4 AS (SELECT 1 AS c FROM L3 A CROSS JOIN L3),
+L5 AS (SELECT 1 AS c FROM L4 A CROSS JOIN L4),
+NUMS AS (SELECT 1 AS NUM FROM L5)   
+SELECT TOP 10
+  CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS INT) id
+, CAST(t.RAND_VALUE AS int) random_int
+, CAST(t.RAND_VALUE AS VARCHAR(100)) random_string
+, CAST(GETDATE() AS DATETIME) current_date
+FROM NUMS CROSS JOIN (SELECT ROUND(1000 * RAND(CHECKSUM(NEWID())), 0) RAND_VALUE) t;
+  ";
+  public static string Query_1_000 = @"
+  WITH
+L0 AS (SELECT 1 AS c UNION ALL SELECT 1),
+L1 AS (SELECT 1 AS c FROM L0 A CROSS JOIN L0 B),
+L2 AS (SELECT 1 AS c FROM L1 A CROSS JOIN L1 B),
+L3 AS (SELECT 1 AS c FROM L2 A CROSS JOIN L2 B),
+L4 AS (SELECT 1 AS c FROM L3 A CROSS JOIN L3),
+L5 AS (SELECT 1 AS c FROM L4 A CROSS JOIN L4),
+NUMS AS (SELECT 1 AS NUM FROM L5)   
+SELECT TOP 1000
+  CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS INT) id
+, CAST(t.RAND_VALUE AS int) random_int
+, CAST(t.RAND_VALUE AS VARCHAR(100)) random_string
+, CAST(GETDATE() AS DATETIME) current_date
+FROM NUMS CROSS JOIN (SELECT ROUND(1000 * RAND(CHECKSUM(NEWID())), 0) RAND_VALUE) t;
+  ";
+
+  public static string Query_100_000 = @"
+  WITH
+L0 AS (SELECT 1 AS c UNION ALL SELECT 1),
+L1 AS (SELECT 1 AS c FROM L0 A CROSS JOIN L0 B),
+L2 AS (SELECT 1 AS c FROM L1 A CROSS JOIN L1 B),
+L3 AS (SELECT 1 AS c FROM L2 A CROSS JOIN L2 B),
+L4 AS (SELECT 1 AS c FROM L3 A CROSS JOIN L3),
+L5 AS (SELECT 1 AS c FROM L4 A CROSS JOIN L4),
+NUMS AS (SELECT 1 AS NUM FROM L5)   
+SELECT TOP 100000
+  CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS INT) id
+, CAST(t.RAND_VALUE AS int) random_int
+, CAST(t.RAND_VALUE AS VARCHAR(100)) random_string
+, CAST(GETDATE() AS DATETIME) current_date
+FROM NUMS CROSS JOIN (SELECT ROUND(1000 * RAND(CHECKSUM(NEWID())), 0) RAND_VALUE) t;
+  ";
+
+  public static string Query_1_000_000 = @"
+  WITH
+L0 AS (SELECT 1 AS c UNION ALL SELECT 1),
+L1 AS (SELECT 1 AS c FROM L0 A CROSS JOIN L0 B),
+L2 AS (SELECT 1 AS c FROM L1 A CROSS JOIN L1 B),
+L3 AS (SELECT 1 AS c FROM L2 A CROSS JOIN L2 B),
+L4 AS (SELECT 1 AS c FROM L3 A CROSS JOIN L3),
+L5 AS (SELECT 1 AS c FROM L4 A CROSS JOIN L4),
+NUMS AS (SELECT 1 AS NUM FROM L5)   
+SELECT TOP 1000000
+  CAST(ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS INT) id
+, CAST(t.RAND_VALUE AS int) random_int
+, CAST(t.RAND_VALUE AS VARCHAR(100)) random_string
+, CAST(GETDATE() AS DATETIME) current_date
+FROM NUMS CROSS JOIN (SELECT ROUND(1000 * RAND(CHECKSUM(NEWID())), 0) RAND_VALUE) t;
+  ";
 }
 
-public class SysObject
+public class Sample
 {
-  public int object_id { get; set; }
-  public string name { get; set; }
-  public DateTime create_date { get; set; }
-  public bool is_ms_shipped { get; set; }
+  public int id { get; set; }
+  public string random_string { get; set; }
+  public DateTime current_date { get; set; }
+  public int random_int { get; set; }
 }
 
 // Dapper & SqlClient [Old/New] as of March 2019 -> // Latest of each
@@ -57,20 +122,38 @@ public class SqlClientUpdate_MicrosoftDataSqlClient
   }
 
   [Benchmark]
-  public void ExecuteQueryWithResult()
+  public void ExecuteQueryWithResults_10()
   {
     using (var conn = new Microsoft.Data.SqlClient.SqlConnection(Constants.ConnectionString))
     {
-      var count = conn.Query<SysObject>(Constants.SysObjectsQuerySmall);
+      var count = conn.Query<Sample>(Constants.Query_10);
     }
   }
 
   [Benchmark]
-  public void ExecuteQueryWithResult_Large()
+  public void ExecuteQueryWithResults_1_000()
   {
     using (var conn = new Microsoft.Data.SqlClient.SqlConnection(Constants.ConnectionString))
     {
-      var count = conn.Query<SysObject>(Constants.SysObjectsQueryLarge);
+      var count = conn.Query<Sample>(Constants.Query_1_000);
+    }
+  }
+
+  [Benchmark]
+  public void ExecuteQueryWithResults_100_000()
+  {
+    using (var conn = new Microsoft.Data.SqlClient.SqlConnection(Constants.ConnectionString))
+    {
+      var count = conn.Query<Sample>(Constants.Query_100_000);
+    }
+  }
+
+  [Benchmark]
+  public void ExecuteQueryWithResults_1_000_000()
+  {
+    using (var conn = new Microsoft.Data.SqlClient.SqlConnection(Constants.ConnectionString))
+    {
+      var count = conn.Query<Sample>(Constants.Query_1_000_000);
     }
   }
 }
@@ -107,20 +190,38 @@ public class SqlClientUpdate_SystemDataSqlClient
   }
 
   [Benchmark]
-  public void ExecuteQueryWithResult()
+  public void ExecuteQueryWithResults_10()
   {
     using (var conn = new System.Data.SqlClient.SqlConnection(Constants.ConnectionString))
     {
-      var count = conn.Query<SysObject>(Constants.SysObjectsQuerySmall);
+      var count = conn.Query<Sample>(Constants.Query_10);
     }
   }
 
   [Benchmark]
-  public void ExecuteQueryWithResult_Large()
+  public void ExecuteQueryWithResults_1_000()
   {
     using (var conn = new System.Data.SqlClient.SqlConnection(Constants.ConnectionString))
     {
-      var count = conn.Query<SysObject>(Constants.SysObjectsQueryLarge);
+      var count = conn.Query<Sample>(Constants.Query_1_000);
+    }
+  }
+
+  [Benchmark]
+  public void ExecuteQueryWithResults_100_000()
+  {
+    using (var conn = new System.Data.SqlClient.SqlConnection(Constants.ConnectionString))
+    {
+      var count = conn.Query<Sample>(Constants.Query_100_000);
+    }
+  }
+
+  [Benchmark]
+  public void ExecuteQueryWithResults_1_000_000()
+  {
+    using (var conn = new System.Data.SqlClient.SqlConnection(Constants.ConnectionString))
+    {
+      var count = conn.Query<Sample>(Constants.Query_1_000_000);
     }
   }
 }
