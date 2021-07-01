@@ -192,7 +192,7 @@ public class SqlClientUpdate_MicrosoftDataSqlClient
   }
 
   [Benchmark]
-  public void QueryWithResults_ManyColumns_IgnoreMost_100_000()
+  public void Query_ManyColumns_IgnoreMost_100_000()
   {
     var count = _connection.Query<Sample>(Constants.Query_ManyColumns_100_000);
   }
@@ -265,7 +265,7 @@ public class SqlClientUpdate_SystemDataSqlClient
   }
 
   [Benchmark]
-  public void QueryWithResults_ManyColumns_IgnoreMost_100_000()
+  public void Query_ManyColumns_IgnoreMost_100_000()
   {
     var count = _connection.Query<Sample>(Constants.Query_ManyColumns_100_000);
   }
