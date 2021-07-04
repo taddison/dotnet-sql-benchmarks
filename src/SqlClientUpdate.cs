@@ -5,11 +5,13 @@ using BenchmarkDotNet.Diagnosers;
 using Dapper;
 using System;
 
-public static class Constants
+namespace SqlClientUpdate
 {
-  public static string ConnectionString = "server=localhost;initial catalog=master;integrated security=SSPI";
-  // https://dba.stackexchange.com/a/152536
-  public static string BaseQuery = @"
+  public static class Constants
+  {
+    public static string ConnectionString = "server=localhost;initial catalog=master;integrated security=SSPI";
+    // https://dba.stackexchange.com/a/152536
+    public static string BaseQuery = @"
   with
 L0 as (select 1 as c union all select 1),
 L1 as (select 1 as c from L0 A cross join L0 B),
@@ -25,10 +27,10 @@ select top {rowcount}
 , cast(getutcdate() AS datetime) fixed_date
 from nums cross join (select round(1000 * rand(checksum(newid())), 0) rand_value) t;
   ";
-  public static string Query_10 = BaseQuery.Replace("{rowcount}", "10");
-  public static string Query_100_000 = BaseQuery.Replace("{rowcount}", "100000");
+    public static string Query_10 = BaseQuery.Replace("{rowcount}", "10");
+    public static string Query_100_000 = BaseQuery.Replace("{rowcount}", "100000");
 
-  public static string BaseQuery_ManyColumns = @"
+    public static string BaseQuery_ManyColumns = @"
   with
 L0 as (select 1 as c union all select 1),
 L1 as (select 1 as c from L0 A cross join L0 B),
@@ -71,202 +73,204 @@ select top {rowcount}
 , cast(getutcdate() AS datetime) fixed_date_9
 from nums cross join (select round(1000 * rand(checksum(newid())), 0) rand_value) t;
   ";
-  public static string Query_ManyColumns_10 = BaseQuery_ManyColumns.Replace("{rowcount}", "10");
-  public static string Query_ManyColumns_100_000 = BaseQuery_ManyColumns.Replace("{rowcount}", "100000");
-}
+    public static string Query_ManyColumns_10 = BaseQuery_ManyColumns.Replace("{rowcount}", "10");
+    public static string Query_ManyColumns_100_000 = BaseQuery_ManyColumns.Replace("{rowcount}", "100000");
+  }
 
-public class Sample
-{
-  public int id { get; set; }
-  public string random_string { get; set; }
-  public DateTime fixed_date { get; set; }
-  public int random_int { get; set; }
-}
-
-public class Sample_ManyColumns
-{
-  public int id { get; set; }
-  public string random_string { get; set; }
-  public string random_string_1 { get; set; }
-  public string random_string_2 { get; set; }
-  public string random_string_3 { get; set; }
-  public string random_string_4 { get; set; }
-  public string random_string_5 { get; set; }
-  public string random_string_6 { get; set; }
-  public string random_string_7 { get; set; }
-  public string random_string_8 { get; set; }
-  public string random_string_9 { get; set; }
-  public DateTime fixed_date { get; set; }
-  public DateTime fixed_date_1 { get; set; }
-  public DateTime fixed_date_2 { get; set; }
-  public DateTime fixed_date_3 { get; set; }
-  public DateTime fixed_date_4 { get; set; }
-  public DateTime fixed_date_5 { get; set; }
-  public DateTime fixed_date_6 { get; set; }
-  public DateTime fixed_date_7 { get; set; }
-  public DateTime fixed_date_8 { get; set; }
-  public DateTime fixed_date_9 { get; set; }
-  public int random_int { get; set; }
-  public int random_int_1 { get; set; }
-  public int random_int_2 { get; set; }
-  public int random_int_3 { get; set; }
-  public int random_int_4 { get; set; }
-  public int random_int_5 { get; set; }
-  public int random_int_6 { get; set; }
-  public int random_int_7 { get; set; }
-  public int random_int_8 { get; set; }
-  public int random_int_9 { get; set; }
-}
-
-// Dapper & SqlClient [Old/New] as of March 2019 -> // Latest of each
-// https://www.nuget.org/packages/Microsoft.Data.SqlClient/
-// https://www.nuget.org/packages/System.Data.SqlClient/
-// https://www.nuget.org/packages/Dapper
-
-[Config(typeof(Config))]
-public class SqlClientUpdate_MicrosoftDataSqlClient
-{
-  private class Config : ManualConfig
+  public class Sample
   {
-    public Config()
-    {
-      var baseJob = Job.Default;
+    public int id { get; set; }
+    public string random_string { get; set; }
+    public DateTime fixed_date { get; set; }
+    public int random_int { get; set; }
+  }
 
-      AddJob(baseJob.WithNuGet(new NuGetReferenceList() {
+  public class Sample_ManyColumns
+  {
+    public int id { get; set; }
+    public string random_string { get; set; }
+    public string random_string_1 { get; set; }
+    public string random_string_2 { get; set; }
+    public string random_string_3 { get; set; }
+    public string random_string_4 { get; set; }
+    public string random_string_5 { get; set; }
+    public string random_string_6 { get; set; }
+    public string random_string_7 { get; set; }
+    public string random_string_8 { get; set; }
+    public string random_string_9 { get; set; }
+    public DateTime fixed_date { get; set; }
+    public DateTime fixed_date_1 { get; set; }
+    public DateTime fixed_date_2 { get; set; }
+    public DateTime fixed_date_3 { get; set; }
+    public DateTime fixed_date_4 { get; set; }
+    public DateTime fixed_date_5 { get; set; }
+    public DateTime fixed_date_6 { get; set; }
+    public DateTime fixed_date_7 { get; set; }
+    public DateTime fixed_date_8 { get; set; }
+    public DateTime fixed_date_9 { get; set; }
+    public int random_int { get; set; }
+    public int random_int_1 { get; set; }
+    public int random_int_2 { get; set; }
+    public int random_int_3 { get; set; }
+    public int random_int_4 { get; set; }
+    public int random_int_5 { get; set; }
+    public int random_int_6 { get; set; }
+    public int random_int_7 { get; set; }
+    public int random_int_8 { get; set; }
+    public int random_int_9 { get; set; }
+  }
+
+  // Dapper & SqlClient [Old/New] as of March 2019 -> // Latest of each
+  // https://www.nuget.org/packages/Microsoft.Data.SqlClient/
+  // https://www.nuget.org/packages/System.Data.SqlClient/
+  // https://www.nuget.org/packages/Dapper
+
+  [Config(typeof(Config))]
+  public class SqlClientUpdate_MicrosoftDataSqlClient
+  {
+    private class Config : ManualConfig
+    {
+      public Config()
+      {
+        var baseJob = Job.Default;
+
+        AddJob(baseJob.WithNuGet(new NuGetReferenceList() {
             new NuGetReference("Microsoft.Data.SqlClient", "1.0.19239.1"),
             new NuGetReference("Dapper", "1.60.6"),
         }));
-      AddJob(baseJob.WithNuGet(new NuGetReferenceList() {
+        AddJob(baseJob.WithNuGet(new NuGetReferenceList() {
             new NuGetReference("Microsoft.Data.SqlClient", "3.0.0"),
             new NuGetReference("Dapper", "2.0.90"),
         }));
 
-      AddDiagnoser(MemoryDiagnoser.Default);
+        AddDiagnoser(MemoryDiagnoser.Default);
+      }
+    }
+
+    private Microsoft.Data.SqlClient.SqlConnection _connection;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+      _connection = new Microsoft.Data.SqlClient.SqlConnection(Constants.ConnectionString);
+    }
+
+    [GlobalCleanup]
+    public void Cleanup() => _connection.Dispose();
+
+    [Benchmark]
+    public void Execute()
+    {
+      var count = _connection.Execute("select @@servername;");
+    }
+
+    [Benchmark]
+    public void Query_10()
+    {
+      var count = _connection.Query<Sample>(Constants.Query_10);
+    }
+
+    [Benchmark]
+    public void Query_100_000()
+    {
+      var count = _connection.Query<Sample>(Constants.Query_100_000);
+    }
+
+    [Benchmark]
+    public void Query_ManyColumns_10()
+    {
+      var count = _connection.Query<Sample_ManyColumns>(Constants.Query_ManyColumns_10);
+    }
+
+    [Benchmark]
+    public void Query_ManyColumns_100_000()
+    {
+      var count = _connection.Query<Sample_ManyColumns>(Constants.Query_ManyColumns_100_000);
+    }
+
+    [Benchmark]
+    public void Query_ManyColumns_IgnoreMost_10()
+    {
+      var count = _connection.Query<Sample>(Constants.Query_ManyColumns_10);
+    }
+
+    [Benchmark]
+    public void Query_ManyColumns_IgnoreMost_100_000()
+    {
+      var count = _connection.Query<Sample>(Constants.Query_ManyColumns_100_000);
     }
   }
 
-  private Microsoft.Data.SqlClient.SqlConnection _connection;
-
-  [GlobalSetup]
-  public void Setup() {
-    _connection = new Microsoft.Data.SqlClient.SqlConnection(Constants.ConnectionString);
-  }
-
-  [GlobalCleanup]
-  public void Cleanup() => _connection.Dispose();
-
-  [Benchmark]
-  public void Execute()
+  [Config(typeof(Config))]
+  public class SqlClientUpdate_SystemDataSqlClient
   {
-    var count = _connection.Execute("select @@servername;");
-  }
-
-  [Benchmark]
-  public void Query_10()
-  {
-    var count = _connection.Query<Sample>(Constants.Query_10);
-  }
-
-  [Benchmark]
-  public void Query_100_000()
-  {
-    var count = _connection.Query<Sample>(Constants.Query_100_000);
-  }
-
-  [Benchmark]
-  public void Query_ManyColumns_10()
-  {
-    var count = _connection.Query<Sample_ManyColumns>(Constants.Query_ManyColumns_10);
-  }
-
-  [Benchmark]
-  public void Query_ManyColumns_100_000()
-  {
-    var count = _connection.Query<Sample_ManyColumns>(Constants.Query_ManyColumns_100_000);
-  }
-
-  [Benchmark]
-  public void Query_ManyColumns_IgnoreMost_10()
-  {
-    var count = _connection.Query<Sample>(Constants.Query_ManyColumns_10);
-  }
-
-  [Benchmark]
-  public void Query_ManyColumns_IgnoreMost_100_000()
-  {
-    var count = _connection.Query<Sample>(Constants.Query_ManyColumns_100_000);
-  }
-}
-
-[Config(typeof(Config))]
-public class SqlClientUpdate_SystemDataSqlClient
-{
-  private class Config : ManualConfig
-  {
-    public Config()
+    private class Config : ManualConfig
     {
-      var baseJob = Job.Default;
+      public Config()
+      {
+        var baseJob = Job.Default;
 
-      AddJob(baseJob.WithNuGet(new NuGetReferenceList() {
+        AddJob(baseJob.WithNuGet(new NuGetReferenceList() {
             new NuGetReference("System.Data.SqlClient", "4.6.0"),
             new NuGetReference("Dapper", "1.60.6"),
         }));
-      AddJob(baseJob.WithNuGet(new NuGetReferenceList() {
+        AddJob(baseJob.WithNuGet(new NuGetReferenceList() {
             new NuGetReference("System.Data.SqlClient", "4.8.2"),
             new NuGetReference("Dapper", "2.0.90"),
         }));
 
-      AddDiagnoser(MemoryDiagnoser.Default);
+        AddDiagnoser(MemoryDiagnoser.Default);
+      }
     }
-  }
 
-  private System.Data.SqlClient.SqlConnection _connection;
+    private System.Data.SqlClient.SqlConnection _connection;
 
-  [GlobalSetup]
-  public void Setup() => _connection = new System.Data.SqlClient.SqlConnection(Constants.ConnectionString);
+    [GlobalSetup]
+    public void Setup() => _connection = new System.Data.SqlClient.SqlConnection(Constants.ConnectionString);
 
-  [GlobalCleanup]
-  public void Cleanup() => _connection.Dispose();
+    [GlobalCleanup]
+    public void Cleanup() => _connection.Dispose();
 
-  [Benchmark]
-  public void Execute()
-  {
-    var count = _connection.Execute("select @@servername;");
-  }
+    [Benchmark]
+    public void Execute()
+    {
+      var count = _connection.Execute("select @@servername;");
+    }
 
-  [Benchmark]
-  public void Query_10()
-  {
-    var count = _connection.Query<Sample>(Constants.Query_10);
-  }
+    [Benchmark]
+    public void Query_10()
+    {
+      var count = _connection.Query<Sample>(Constants.Query_10);
+    }
 
-  [Benchmark]
-  public void Query_100_000()
-  {
-    var count = _connection.Query<Sample>(Constants.Query_100_000);
-  }
+    [Benchmark]
+    public void Query_100_000()
+    {
+      var count = _connection.Query<Sample>(Constants.Query_100_000);
+    }
 
-  [Benchmark]
-  public void Query_ManyColumns_10()
-  {
-    var count = _connection.Query<Sample_ManyColumns>(Constants.Query_ManyColumns_10);
-  }
+    [Benchmark]
+    public void Query_ManyColumns_10()
+    {
+      var count = _connection.Query<Sample_ManyColumns>(Constants.Query_ManyColumns_10);
+    }
 
-  [Benchmark]
-  public void Query_ManyColumns_100_000()
-  {
-    var count = _connection.Query<Sample_ManyColumns>(Constants.Query_ManyColumns_100_000);
-  }
+    [Benchmark]
+    public void Query_ManyColumns_100_000()
+    {
+      var count = _connection.Query<Sample_ManyColumns>(Constants.Query_ManyColumns_100_000);
+    }
 
-  [Benchmark]
-  public void Query_ManyColumns_IgnoreMost_10()
-  {
-    var count = _connection.Query<Sample>(Constants.Query_ManyColumns_10);
-  }
+    [Benchmark]
+    public void Query_ManyColumns_IgnoreMost_10()
+    {
+      var count = _connection.Query<Sample>(Constants.Query_ManyColumns_10);
+    }
 
-  [Benchmark]
-  public void Query_ManyColumns_IgnoreMost_100_000()
-  {
-    var count = _connection.Query<Sample>(Constants.Query_ManyColumns_100_000);
+    [Benchmark]
+    public void Query_ManyColumns_IgnoreMost_100_000()
+    {
+      var count = _connection.Query<Sample>(Constants.Query_ManyColumns_100_000);
+    }
   }
 }
