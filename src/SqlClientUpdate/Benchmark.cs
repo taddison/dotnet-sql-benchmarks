@@ -9,7 +9,7 @@ namespace SqlClientUpdate
 {
   public abstract class Base
   {
-    public static Job Job = Job.ShortRun;
+    public static Job Job = Job.Default;
     protected System.Data.Common.DbConnection _connection;
 
     [Benchmark]
@@ -98,8 +98,6 @@ namespace SqlClientUpdate
 
     [GlobalCleanup]
     public void Cleanup() => _connection.Dispose();
-
-
   }
 
   [Config(typeof(Config))]
@@ -115,7 +113,7 @@ namespace SqlClientUpdate
             new NuGetReference("System.Data.SqlClient", "4.6.0"),
             new NuGetReference("Dapper", "1.60.6"),
         });
-        
+
         var newPackages = baseJob.WithNuGet(new NuGetReferenceList() {
             new NuGetReference("System.Data.SqlClient", "4.8.2"),
             new NuGetReference("Dapper", "2.0.90"),
