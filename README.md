@@ -1,8 +1,10 @@
 # dotnet-sql-benchmarks
 
-- Job is currently defaulted to Short for testing (put back to default)
-- Should add tests for wider result sets (mapped/unmapped)
+- Put job back to default (not short run)
+- Consider a toggle for multiple runtimes
 
 ```shell
-dotnet run -c Release --filter ** --join
+dotnet run -c Release --framework net48 --filter * --join
+
+dotnet run -c Release --anyCategories execute --join
 ```
