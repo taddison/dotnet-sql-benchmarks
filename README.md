@@ -6,9 +6,14 @@ Requires:
 - A local instance of SQL Server (any edition)
 
 ```shell
+# Run all the benchmarks
 dotnet run -c Release --framework net48 --filter * --join
 
-dotnet run -c Release --anyCategories execute --join
+# Run all the SqlClientUpdate benchmarks
+dotnet run -c Release --filter SqlClientUpdate* --join
+
+# Run the execute category of benchmarks in SqlClientUpdate
+dotnet run -c Release --filter SqlClientUpdate* --allCategories execute --join
 ```
 
 ## Benchmarks
