@@ -13,4 +13,4 @@ dotnet run -c Release --anyCategories execute --join
 
 ## Benchmarks
 
-- [SQLClientUpdate](./SqlClientUpdate/readme.md)
+- [SQLClientUpdate](./src/SqlClientUpdate/readme.md)
