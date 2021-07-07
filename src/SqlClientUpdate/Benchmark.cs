@@ -7,10 +7,14 @@ using BenchmarkDotNet.Environments;
 
 namespace SqlClientUpdate
 {
+  [MemoryDiagnoser]
   public abstract class Benchmark
   {
     public static Job Job = Job.Default;
     protected System.Data.Common.DbConnection _connection;
+
+    [GlobalCleanup]
+    public void Cleanup() => _connection.Dispose();
 
     [Benchmark]
     [BenchmarkCategory("Execute")]
@@ -80,12 +84,10 @@ namespace SqlClientUpdate
             new NuGetReference("Dapper", "2.0.90"),
         });
 
-        AddJob(oldPackages.WithRuntime(CoreRuntime.Core50));
         AddJob(oldPackages.WithRuntime(ClrRuntime.Net48));
-        AddJob(newPackages.WithRuntime(CoreRuntime.Core50));
+        AddJob(oldPackages.WithRuntime(CoreRuntime.Core50));
         AddJob(newPackages.WithRuntime(ClrRuntime.Net48));
-
-        AddDiagnoser(MemoryDiagnoser.Default);
+        AddJob(newPackages.WithRuntime(CoreRuntime.Core50));
       }
     }
 
@@ -95,9 +97,6 @@ namespace SqlClientUpdate
       _connection = new Microsoft.Data.SqlClient.SqlConnection(Constants.ConnectionString);
       _connection.Open();
     }
-
-    [GlobalCleanup]
-    public void Cleanup() => _connection.Dispose();
   }
 
   [Config(typeof(Config))]
@@ -119,12 +118,10 @@ namespace SqlClientUpdate
             new NuGetReference("Dapper", "2.0.90"),
         });
 
-        AddJob(oldPackages.WithRuntime(CoreRuntime.Core50));
         AddJob(oldPackages.WithRuntime(ClrRuntime.Net48));
-        AddJob(newPackages.WithRuntime(CoreRuntime.Core50));
+        AddJob(oldPackages.WithRuntime(CoreRuntime.Core50));
         AddJob(newPackages.WithRuntime(ClrRuntime.Net48));
-
-        AddDiagnoser(MemoryDiagnoser.Default);
+        AddJob(newPackages.WithRuntime(CoreRuntime.Core50));
       }
     }
 
@@ -134,8 +131,5 @@ namespace SqlClientUpdate
       _connection = new System.Data.SqlClient.SqlConnection(Constants.ConnectionString);
       _connection.Open();
     }
-
-    [GlobalCleanup]
-    public void Cleanup() => _connection.Dispose();
   }
 }
