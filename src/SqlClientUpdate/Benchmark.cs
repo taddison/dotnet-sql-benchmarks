@@ -7,7 +7,7 @@ using BenchmarkDotNet.Environments;
 
 namespace SqlClientUpdate
 {
-  public abstract class Base
+  public abstract class Benchmark
   {
     public static Job Job = Job.Default;
     protected System.Data.Common.DbConnection _connection;
@@ -63,13 +63,13 @@ namespace SqlClientUpdate
   }
 
   [Config(typeof(Config))]
-  public class SqlClientUpdate_MicrosoftData : Base
+  public class SqlClientUpdate_MicrosoftData : Benchmark
   {
     private class Config : ManualConfig
     {
       public Config()
       {
-        var baseJob = Base.Job;
+        var baseJob = Benchmark.Job;
 
         var oldPackages = baseJob.WithNuGet(new NuGetReferenceList() {
             new NuGetReference("Microsoft.Data.SqlClient", "1.0.19239.1"),
@@ -101,13 +101,13 @@ namespace SqlClientUpdate
   }
 
   [Config(typeof(Config))]
-  public class SqlClientUpdate_SystemData : Base
+  public class SqlClientUpdate_SystemData : Benchmark
   {
     private class Config : ManualConfig
     {
       public Config()
       {
-        var baseJob = Base.Job;
+        var baseJob = Benchmark.Job;
 
         var oldPackages = baseJob.WithNuGet(new NuGetReferenceList() {
             new NuGetReference("System.Data.SqlClient", "4.6.0"),
