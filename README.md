@@ -1,9 +1,12 @@
-# dotnet-sql-benchmarks
+# .NET ♥ SQL Benchmarks
 
-Requires:
-- .NET Framework 4.8.2 SDK
-- .NET5 SDK
+## Requirements
+
+- [.NET Framework 4.8.2 SDK] (Get the Developer Pack)
+- [.NET5 SDK]
 - A local instance of SQL Server (any edition)
+
+## Running benchmarks
 
 ```shell
 # Run all the benchmarks
@@ -16,6 +19,9 @@ dotnet run -c Release --filter SqlClientUpdate* --join
 dotnet run -c Release --filter SqlClientUpdate* --allCategories execute --join
 ```
 
-## Benchmarks
+## List of benchmarks
 
 - [SQLClientUpdate](./src/SqlClientUpdate/readme.md)
+
+[.net framework 4.8.2 sdk]: https://dotnet.microsoft.com/download/dotnet-framework/net48
+[.net5 sdk]: https://dotnet.microsoft.com/download/dotnet/5.0
