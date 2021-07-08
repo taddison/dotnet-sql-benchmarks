@@ -1,7 +1,8 @@
 using System;
 
-namespace SqlClientUpdate {
-public class Sample
+namespace SqlClientUpdate
+{
+  public class Sample
   {
     public int id { get; set; }
     public string random_string { get; set; }
