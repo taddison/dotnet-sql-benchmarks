@@ -22,6 +22,13 @@ dotnet run -c Release -f net48 --filter SqlClientUpdate* --join
 
 # Run only the Execute category
 dotnet run -c Release -f net48 --filter SqlClientUpdate* --allCategories Execute --join
+
+# Categories include
+# Execute
+# Query
+# RowsSmall, RowsLarge
+# ColumnsSmall, ColumnsLarge
+# IgnoreColumns
 ```
 
 ## Changing the duration
