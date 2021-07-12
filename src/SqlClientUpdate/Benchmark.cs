@@ -80,15 +80,14 @@ namespace SqlClientUpdate
             new NuGetReference("Dapper", "1.60.6"),
         });
 
-        var newPackages = baseJob.WithNuGet(new NuGetReferenceList() {
-            new NuGetReference("System.Data.SqlClient", "4.8.2"),
-            new NuGetReference("Dapper", "2.0.90"),
-        });
-
         // Initial state - .NET Framework 4.8.2, Dapper 1.60.6, System.Data.SqlClient 4.6.0
         AddJob(oldPackages.WithRuntime(ClrRuntime.Net48));
 
         // ALL_BENCHMARKS: Uncomment the below to benchmark all variations of packages/runtimes
+        // var newPackages = baseJob.WithNuGet(new NuGetReferenceList() {
+        //     new NuGetReference("System.Data.SqlClient", "4.8.2"),
+        //     new NuGetReference("Dapper", "2.0.90"),
+        // });
         // AddJob(oldPackages.WithRuntime(CoreRuntime.Core50));
         // AddJob(newPackages.WithRuntime(ClrRuntime.Net48));
         // AddJob(newPackages.WithRuntime(CoreRuntime.Core50));
@@ -112,10 +111,6 @@ namespace SqlClientUpdate
       {
         var baseJob = Benchmark.Job;
 
-        var oldPackages = baseJob.WithNuGet(new NuGetReferenceList() {
-            new NuGetReference("Microsoft.Data.SqlClient", "1.0.19239.1"),
-            new NuGetReference("Dapper", "1.60.6"),
-        });
         var newPackages = baseJob.WithNuGet(new NuGetReferenceList() {
             new NuGetReference("Microsoft.Data.SqlClient", "3.0.0"),
             new NuGetReference("Dapper", "2.0.90"),
@@ -125,6 +120,10 @@ namespace SqlClientUpdate
         AddJob(newPackages.WithRuntime(CoreRuntime.Core50));
 
         // ALL_BENCHMARKS: Uncomment the below to benchmark all variations of packages/runtimes
+        // var oldPackages = baseJob.WithNuGet(new NuGetReferenceList() {
+        //     new NuGetReference("Microsoft.Data.SqlClient", "1.0.19239.1"),
+        //     new NuGetReference("Dapper", "1.60.6"),
+        // });
         // AddJob(oldPackages.WithRuntime(ClrRuntime.Net48));
         // AddJob(oldPackages.WithRuntime(CoreRuntime.Core50));
         // AddJob(newPackages.WithRuntime(ClrRuntime.Net48));
